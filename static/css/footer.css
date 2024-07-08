@@ -1,22 +1,18 @@
-/* Путь: static/css/base.css */
-
-/* Основной контейнер занимает всю высоту экрана */
-html, body {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
+html,
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Основной контент занимает все пространство между шапкой и подвалом */
 main {
-    flex: 1;
+  flex: 1;
 }
 
-/* Стиль подвала */
 footer {
-    background-color: #343a40;
-    color: rgb(165, 165, 165);
-    text-align: center;
-    padding: 1rem;
+  background-color: #343a40;
+  color: rgb(165, 165, 165);
+  text-align: center;
+  padding: 1rem;
 }
