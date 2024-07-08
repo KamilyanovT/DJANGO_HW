@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/blog_catalog.css' %}" />
+{% endblock  %}
+{% block title %}Блог{% endblock %}
+{% block content %}
+<h1 class="mt-3">Это блог!</h1>
+<p>Здесь вы найдете много интересного и полезного!</p>
+<form class="mb-5 mt-3">
+    <div class="input-group mb-3">
+        <input class="form-control" type="search" placeholder="Поиск" aria-label="Search" name="search">
+        <button class="btn btn-dark" type="submit">Поиск</button>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="search_in_title" id="searchInTitle">
+        <label class="form-check-label" for="searchInTitle">Заголовок</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="search_in_text" id="searchInText">
+        <label class="form-check-label" for="searchInText">Текст</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="search_in_tags" id="searchInTags">
+        <label class="form-check-label" for="searchInTags">Теги</label>
+    </div>
+</form>
+<div class="row">
+    {% for post in posts %}
+        <div class="col-12 mb-4">
+            {% include "includes/post_preview.html" %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

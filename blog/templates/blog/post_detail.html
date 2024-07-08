@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load markdown_to_html %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{% markdown_to_html post.title %}</h5>
+            <p class="card-text">{% markdown_to_html post.text %}</p>
+            <p class="card-text"><strong>Автор:</strong> {{ post.author|default:"Автор не известен" }}</p>
+            <p class="card-text"><strong>Дата публикации:</strong> {{ post.published_date }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="me-3"><i class="bi bi-chat-dots"></i> {{ post.comments|length }}</span>
+                </div>
+                <div>
+                    <a href="{% url 'blog_catalog' %}" class="btn btn-dark d-block d-md-none">
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
+                    <a href="{% url 'blog_catalog' %}" class="btn btn-dark d-none d-md-block">
+                        Вернуться к каталогу
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-4">
+        <h5>Комментарии</h5>
+        {% for comment in post.comments %}
+            {% include "includes/comment_include.html" %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
