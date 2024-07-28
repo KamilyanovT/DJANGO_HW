@@ -70,8 +70,29 @@ def index(request):
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
-    context = {        "menu": menu,
+    context = {
+        "menu": menu,
         "post": post,
         "page_alias": "blog_catalog",
     }
     return render(request, "blog/post_detail.html", context)
+
+
+def category_detail(request, slug):
+    posts = Post.objects.filter(category__slug=slug)
+    context = {
+        "menu": menu,
+        "posts": posts,
+        "page_alias": "blog_catalog",
+    }
+    return render(request, "blog/blog_catalog.html", context)
+
+
+def tag_detail(request, slug):
+    posts = posts = Post.objects.filter(tags__slug=slug)
+    context = {
+        "menu": menu,
+        "posts": posts,
+        "page_alias": "blog_catalog",
+    }
+    return render(request, "blog/blog_catalog.html", context)
