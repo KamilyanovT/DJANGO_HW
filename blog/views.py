@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render, HttpResponse
 from blog.models import Post
 from django.shortcuts import get_object_or_404
+from django.db.models import F, Q
 
 USERS_COUNT = 10
 posts = Post.objects.all()
@@ -26,33 +27,30 @@ def about(request):
 
 
 def blog_catalog(request):
+    posts = Post.objects.all()
+
     if request.method == "GET":
         search = request.GET.get("search")
-        search_in_title = request.GET.get("searchInTitle")
-        search_in_text = request.GET.get("searchInText")
-        search_in_tags = request.GET.get("searchInTags")
+        search_in_title = request.GET.get("search_in_title")
+        search_in_text = request.GET.get("search_in_text")
+        search_in_tags = request.GET.get("search_in_tags")
         posts_filtered = []
 
         if search:
-
-            for post in posts:
-                if not search_in_title and not search_in_text and not search_in_tags:
-                    if search.lower() in post["text"].lower():
-                        posts_filtered.append(post)
-                if search_in_title:
-                    if search.lower() in post["title"].lower():
-                        posts_filtered.append(post)
-                if search_in_text:
-                    if search.lower() in post["text"].lower():
-                        posts_filtered.append(post)
-                if search_in_tags:
-                    for tag in post["tags"]:
-                        if search.lower() in tag.lower():
-                            posts_filtered.append(post)
+            query = Q()
+            if search_in_title:
+                query |= Q(title__icontains=search)
+            if search_in_text:
+                query |= Q(text__icontains=search)
+            if search_in_tags:
+                query |= Q(tags__name__icontains=search)
+            if not search_in_title and not search_in_text and not search_in_tags:
+                query |= Q(text__icontains=search)
+            posts = posts.filter(query)
 
         context = {
             "menu": menu,
-            "posts": posts_filtered if posts_filtered else posts,
+            "posts": posts,
             "page_alias": "blog_catalog",
         }
         return render(request, "blog/blog_catalog.html", context)
@@ -69,7 +67,9 @@ def index(request):
 
 
 def post_detail(request, slug):
-    post = get_object_or_404(Post, slug=slug)
+    post = Post.objects.get(slug=slug)
+    post.views = F("views") + 1
+    post.save(update_fields=["views"])
     context = {
         "menu": menu,
         "post": post,
