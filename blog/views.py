@@ -75,6 +75,7 @@ def post_detail(request, slug):
         "post": post,
         "page_alias": "blog_catalog",
     }
+    post.refresh_from_db()
     return render(request, "blog/post_detail.html", context)
 
 
